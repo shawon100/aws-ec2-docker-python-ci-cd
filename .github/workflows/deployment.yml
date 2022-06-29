@@ -7,7 +7,7 @@ name: Buid & Deploy (Docker)
 
 jobs:
   build:
-    name: Build
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -44,8 +44,8 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOSTNAME}'
-        docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
-        docker stop backend-flask
-        docker rm backend-flask
-        docker run -d -p 80:5000 --name backend-flask $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOSTNAME}
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
+          docker stop backend-flask
+          docker rm backend-flask
+          docker run -d -p 80:5000 --name backend-flask $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
