@@ -1,0 +1,6 @@
+version: "2"
+services:
+  app:
+    image: ECR_REGISTRY/cloudageskill:$GITHUB_SHA
+    ports:
+      - "80:5000"
