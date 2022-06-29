@@ -53,5 +53,5 @@ jobs:
           cd /tmp
           # docker stop backend-flask
           # docker rm backend-flask
-          docker-compose up
+          docker-compose up -d -p backend-flask
         '
