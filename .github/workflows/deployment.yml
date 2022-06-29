@@ -3,11 +3,11 @@ on:
     branches:
       - main
 
-name: Buid Image (Docker)
+name: Buid & Deploy (Docker)
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -36,3 +36,16 @@ jobs:
         echo "Pushing image to ECR..."
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA"
+    - name: Deploy on AWS EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY  }}
+        HOSTNAME: ${{ secrets.HOSTNAME  }}
+        USER_NAME: ${{ secrets.USERNAME  }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOSTNAME}'
+        docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
+        docker stop backend-flask
+        docker rm backend-flask
+        docker run -d -p 80:5000 --name backend-flask $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
