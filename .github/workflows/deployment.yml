@@ -45,8 +45,8 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
         ls
-        sed -i -e 's/GITHUB_SHA/'"$GITHUB_SHA"'/' ${{ github.workspace }}/.github/workflows/deployment.yml
-        sed -i -e 's/ECR_REGISTRY/'"$ECR_REGISTRY"'/' ${{ github.workspace }}/.github/workflows/deployment.yml
+        sed -i -e 's/GITHUB_SHA/'"$GITHUB_SHA"'/' ${{ github.workspace }}/docker-compose.yml
+        sed -i -e 's/ECR_REGISTRY/'"$ECR_REGISTRY"'/' ${{ github.workspace }}/docker-compose.yml
         scp -o StrictHostKeyChecking=no -i private_key.pem ${{ github.workspace }}/docker-compose.yml ${USER_NAME}@${HOSTNAME}:/tmp 
         ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOSTNAME} '
           
