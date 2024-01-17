@@ -36,7 +36,7 @@ aws ecr get-login-password --region us-east-2 | docker login --username AWS --pa
 Example:
 
 
-aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 32423423423.dkr.ecr.us-east-2.amazonaws.com/cloudageskill
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 32423423423.dkr.ecr.us-east-2.amazonaws.com/ecr-repository
 
 If you have still access problem, attach ecr iam role with your ec2
 
